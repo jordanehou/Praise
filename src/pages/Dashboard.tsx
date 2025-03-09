@@ -19,34 +19,42 @@ import {
   TextField,
   Box,
 } from "@mui/material";
-import { Edit, Delete, AddBox, Category } from "@mui/icons-material";
+import { Edit, Delete, AddBox, Category as CategoryIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
+// Définition du type CategoryType
+interface CategoryType {
+  id: number;
+  title: string;
+}
+
 export default function Dashboard() {
-  const [categories, setCategories] = useState<{ id: number; title: string }[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<{ id: number; title: string } | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [newCategory, setNewCategory] = useState("");
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState<{ id: number; title: string } | null>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState<CategoryType | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
+  // Fonction pour récupérer les catégories
   const fetchCategories = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:8000/categories/list");
-      setCategories(response.data.categories);
+      console.log("Données reçues:", response.data); // Debug pour voir la structure de l'API
+      setCategories(response.data.categories || []); // S'assurer que c'est un tableau
     } catch (error) {
       console.error("Erreur lors du chargement des catégories", error);
     }
   };
 
-  const handleOpen = (category: { id: number; title: string } | null = null) => {
+  const handleOpen = (category: CategoryType | null = null) => {
     setEditMode(!!category);
     setSelectedCategory(category);
     setNewCategory(category ? category.title : "");
@@ -60,7 +68,7 @@ export default function Dashboard() {
   const handleSave = async () => {
     try {
       if (editMode && selectedCategory) {
-        await axios.post(`http://127.0.0.1:8000/categories/update/${selectedCategory.id}`, { title: newCategory });
+        await axios.put(`http://127.0.0.1:8000/categories/update/${selectedCategory.id}`, { title: newCategory });
       } else {
         await axios.post("http://127.0.0.1:8000/categories/create", { title: newCategory });
       }
@@ -71,17 +79,17 @@ export default function Dashboard() {
     }
   };
 
-  const confirmDelete = (category: { id: number; title: string }) => {
-    //setCategoryToDelete(category);
+  // Fonction pour ouvrir la boîte de dialogue de confirmation avant suppression
+  const confirmDelete = (category: CategoryType) => {
+    setCategoryToDelete(category);
     setDeleteDialog(true);
-    handleDelete(category);
-    //setSelectedCategory(category);
   };
 
-  const handleDelete = async (category: { id: number; title: string } | null = null) => {
+  // Fonction pour supprimer la catégorie après confirmation
+  const handleDelete = async () => {
     try {
-      if (category) {
-        await axios.delete(`http://127.0.0.1:8000/categories/delete/${category.id}`);
+      if (categoryToDelete) {
+        await axios.delete(`http://127.0.0.1:8000/categories/delete/${categoryToDelete.id}`);
         fetchCategories();
       }
       setDeleteDialog(false);
@@ -128,7 +136,7 @@ export default function Dashboard() {
                   <TableCell>{category.id}</TableCell>
                   <TableCell>
                     <Box display="flex" alignItems="center">
-                      <Category sx={{ color: "#1565C0", mr: 1 }} />
+                      <CategoryIcon sx={{ color: "#1565C0", mr: 1 }} />
                       {category.title}
                     </Box>
                   </TableCell>
@@ -146,7 +154,7 @@ export default function Dashboard() {
                       sx={{ ml: 1, borderRadius: 2, fontWeight: "bold" }}
                       onClick={() => navigate(`/products/${category.id}`)}
                     >
-                      Ajouter un Produit
+                      Voir Produit
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -155,6 +163,17 @@ export default function Dashboard() {
           </Table>
         </TableContainer>
 
+        {/* Boîte de dialogue pour confirmation de suppression */}
+        <Dialog open={deleteDialog} onClose={() => setDeleteDialog(false)}>
+          <DialogTitle>Confirmation</DialogTitle>
+          <DialogContent>Voulez-vous vraiment supprimer cette catégorie ?</DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialog(false)}>Annuler</Button>
+            <Button color="error" onClick={handleDelete}>Supprimer</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Boîte de dialogue pour ajouter/modifier une catégorie */}
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>{editMode ? "Modifier la Catégorie" : "Ajouter une Catégorie"}</DialogTitle>
           <DialogContent>
@@ -170,16 +189,9 @@ export default function Dashboard() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">Annuler</Button>
-            {/* <Button onClick={handleSave} color="primary">{editMode ? "Mettre à Jour" : "Ajouter"}</Button> */}
-            <Button
-                      variant="contained"
-                      color="success"
-                      size="small"
-                      sx={{ ml: 1, borderRadius: 2, fontWeight: "bold" }}
-                      onClick={handleSave}
-                    >
-                     {editMode ? "Mettre à Jour" : "Ajouter"}
-                    </Button>
+            <Button variant="contained" color="success" sx={{ ml: 1, borderRadius: 2, fontWeight: "bold" }} onClick={handleSave}>
+              {editMode ? "Mettre à Jour" : "Ajouter"}
+            </Button>
           </DialogActions>
         </Dialog>
       </Container>

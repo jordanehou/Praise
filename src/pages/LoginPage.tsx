@@ -9,8 +9,8 @@ import {
   Paper,
   InputAdornment,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { AccountCircle, Lock } from "@mui/icons-material";
+import { useNavigate, Link } from "react-router-dom"; // Importer Link
+import { AccountCircle, Lock } from "@mui/icons-material"; // Vérifiez l'importation ici
 
 export default function Login() {
   const navigate = useNavigate();
@@ -37,6 +37,7 @@ export default function Login() {
       localStorage.setItem("token", response.data.access_token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
+      // Rediriger vers le tableau de bord
       navigate("/dashboard");
     } catch (err) {
       setError("Nom d'utilisateur ou mot de passe incorrect.");
@@ -113,6 +114,13 @@ export default function Login() {
               Se connecter
             </Button>
           </form>
+
+          <Typography sx={{ mt: 2, textAlign: 'center' }}>
+            Vous n'avez pas de compte ?{" "}
+            <Link to="/register" style={{ color: "#1565C0", textDecoration: "underline" }}>
+              Créer un compte
+            </Link>
+          </Typography>
         </Paper>
       </Container>
     </Box>
