@@ -56,6 +56,7 @@ import ProductDashboard from "./pages/ProductDashboard";
 import DeliveryDashboard from "./pages/DeliveryDashboard";
 import UsageDashboard from "./pages/UsageDashboard";
 import { FC } from "react";
+import HomePage from "./pages/HomePage";
 
 const PrivateRoute: FC<{ component: FC }> = ({ component: Component }) => {
   const { isAuthenticated } = useAuth(); // Utiliser le hook ici
@@ -67,13 +68,14 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<PrivateRoute component={Dashboard} />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/deliveries" element={<PrivateRoute component={DeliveryDashboard} />} />
           <Route path="/usages" element={<PrivateRoute component={UsageDashboard} />} />
           <Route path="/products/:categoryId" element={<PrivateRoute component={ProductDashboard} />} />
-          <Route path="/" element={<Navigate to="/login" />} /> {/* Redirection vers /login */}
+          <Route path="/" element={<Navigate to="/home" />} /> {/* Redirection vers /login */}
         </Routes>
       </Router>
     </AuthProvider>

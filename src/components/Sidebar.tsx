@@ -34,7 +34,7 @@
 // }
 
 import { Drawer, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { Dashboard, ExitToApp, LocalShipping, Storage } from "@mui/icons-material"; // Icône pour les livraisons et les usages
+import { Dashboard, ExitToApp, Home, LocalShipping, Storage } from "@mui/icons-material"; // Icône pour les livraisons et les usages
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../pages/AuthContext";
 
@@ -59,6 +59,10 @@ export default function Sidebar() {
         <ListItemButton onClick={() => navigate("/dashboard")}>
           <ListItemIcon><Dashboard /></ListItemIcon>
           <ListItemText primary="Dashboard" />
+        </ListItemButton>
+        <ListItemButton onClick={() => navigate("/home")}>
+          <ListItemIcon>< Home/></ListItemIcon> {/* Icône pour les usages */}
+          <ListItemText primary="Home" />
         </ListItemButton>
         <ListItemButton onClick={() => navigate("/deliveries")}>
           <ListItemIcon><LocalShipping /></ListItemIcon> {/* Icône pour les livraisons */}
