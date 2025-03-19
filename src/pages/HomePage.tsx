@@ -21,7 +21,7 @@ import Sidebar from "../components/Sidebar";
 
 interface CategoryType {
   id: number;
-  name: string;
+  title: string;
 }
 
 interface ProductType {
@@ -135,7 +135,7 @@ export default function HomePage() {
           {categories.map((category) => (
             <Box key={category.id} sx={{ mb: 4, padding: 2, borderRadius: 2, backgroundColor: "#fff", boxShadow: 3 }}>
               <Typography variant="h5" sx={{ fontWeight: "bold", color: "#1976D2", display: "flex", alignItems: "center", mb: 2 }}>
-                <LaboratoryIcon sx={{ mr: 1 }} /> {category.name}
+                <LaboratoryIcon sx={{ mr: 1 }} /> {category.title}
               </Typography>
               <Grid container spacing={2}>
                 {productsByCategory[category.id]?.map((product) => (

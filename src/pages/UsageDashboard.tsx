@@ -44,7 +44,7 @@ interface ProductType {
 
 interface UserType {
   id: number;
-  name: string;
+  username: string;
 }
 
 export default function UsageDashboard() {
@@ -218,7 +218,7 @@ export default function UsageDashboard() {
                   <TableRow key={usage.id} hover>
                     <TableCell>{usage.id}</TableCell>
                     <TableCell>{product ? product.name : "Produit non trouvé"}</TableCell>
-                    <TableCell>{user ? user.name : "Utilisateur non trouvé"}</TableCell>
+                    <TableCell>{user ? user.username : "Utilisateur non trouvé"}</TableCell>
                     <TableCell>{new Date(usage.usage_date).toLocaleDateString()}</TableCell>
                     <TableCell>{usage.purpose}</TableCell>
                     <TableCell>{usage.quantity_used}</TableCell>
@@ -276,7 +276,7 @@ export default function UsageDashboard() {
               >
                 {users.map((user) => (
                   <MenuItem key={user.id} value={user.id}>
-                    {user.name}
+                    {user.username}
                   </MenuItem>
                 ))}
               </Select>
