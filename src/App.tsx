@@ -57,6 +57,14 @@ import DeliveryDashboard from "./pages/DeliveryDashboard";
 import UsageDashboard from "./pages/UsageDashboard";
 import { FC } from "react";
 import HomePage from "./pages/HomePage";
+import Home from "./pages/newD/Home";
+
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+
 
 const PrivateRoute: FC<{ component: FC }> = ({ component: Component }) => {
   const { isAuthenticated } = useAuth(); // Utiliser le hook ici
@@ -68,6 +76,7 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/h" element={<Home />}/>
           <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<PrivateRoute component={Dashboard} />} />

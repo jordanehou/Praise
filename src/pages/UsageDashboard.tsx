@@ -78,7 +78,7 @@ export default function UsageDashboard() {
   // Fonction pour récupérer les produits
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/products/list");
+      const response = await axios.get("http://127.0.0.1:8000/products/list1");
       setProducts(response.data.products || []);
     } catch (error) {
       console.error("Erreur lors du chargement des produits", error);
@@ -89,8 +89,8 @@ export default function UsageDashboard() {
   const fetchUsers = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:8000/users/list");
-      setUsers(response.data.users || []);
-      console.log(response.data.users); // Debug: Vérifiez les utilisateurs récupérés
+      setUsers(response.data); // Assurez-vous d'utiliser response.data directement
+      console.log("Utilisateurs récupérés:", response.data); // Debug: Vérifiez les utilisateurs récupérés
     } catch (error) {
       console.error("Erreur lors du chargement des utilisateurs", error);
     }
@@ -274,11 +274,15 @@ export default function UsageDashboard() {
                 value={newUsage.user_id}
                 onChange={(e) => setNewUsage({ ...newUsage, user_id: +e.target.value })}
               >
-                {users.map((user) => (
-                  <MenuItem key={user.id} value={user.id}>
-                    {user.username}
-                  </MenuItem>
-                ))}
+                {users.length > 0 ? (
+                  users.map((user) => (
+                    <MenuItem key={user.id} value={user.id}>
+                      {user.username}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem disabled>Aucun utilisateur disponible</MenuItem>
+                )}
               </Select>
             </FormControl>
 
