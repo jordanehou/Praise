@@ -78,7 +78,7 @@ export default function UsageDashboard() {
   // Fonction pour récupérer les produits
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/products/list1");
+      const response = await axios.get("http://127.0.0.1:8000/products/listall");
       setProducts(response.data.products || []);
     } catch (error) {
       console.error("Erreur lors du chargement des produits", error);
